@@ -5,7 +5,7 @@ variable "app_name" {
 
 variable "app_env" {
   type        = string
-  description = "Application ENV"
+  description = "Application environment"
 }
 
 variable "container_port" {

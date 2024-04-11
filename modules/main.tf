@@ -35,8 +35,11 @@ module "beanstalk" {
   vpc_id                = module.vpc.vpc.id
   ec2_role              = var.ec2_role
   service_role          = var.service_role
-  rds_hostname          = module.rds.rds_hostname
-  rds_db_name           = module.rds.rds_db_name
-  rds_username          = var.db_username
-  rds_password          = var.db_password
+  env_vars = {
+    "RAILS_ENV"    = var.app_env
+    "RDS_USERNAME" = var.db_username
+    "RDS_PASSWORD" = var.db_password
+    "RDS_DB_NAME"  = module.rds.rds_db_name
+    "RDS_HOSTNAME" = module.rds.rds_hostname
+  }
 }

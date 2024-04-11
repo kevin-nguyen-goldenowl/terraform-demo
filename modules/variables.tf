@@ -4,9 +4,9 @@ variable "app_name" {
 }
 
 variable "app_env" {
-  type = string
+  type        = string
+  description = "Application environment"
 }
-
 
 variable "instance_port" {
   type        = number
@@ -45,25 +45,25 @@ variable "ec2_role" {
 // Database setting
 variable "db_engine" {
   type        = string
-  description = "Database engine (postgres, mysql,...)"
+  description = "Database engine"
   default     = "postgres"
 }
 
 variable "db_instance_class" {
   type        = string
-  description = "Database type (db.t3.micro,...)"
+  description = "Database type"
   default     = "db.t3.micro"
 }
 
 variable "db_engine_version" {
   type        = string
-  description = "Database version (14.5,...)"
+  description = "Database version"
   default     = "14.5"
 }
 
 variable "db_allocated_storage" {
   type        = string
-  description = "Storage (10GB,...)"
+  description = "Database storage"
   default     = "10"
 }
 
@@ -77,11 +77,4 @@ variable "db_password" {
   type        = string
   description = "Database username"
   default     = "pass"
-}
-
-// DNS of domain
-variable "dns_zone" {
-  type        = string
-  description = "The domain you want to host"
-  default     = "none"
 }

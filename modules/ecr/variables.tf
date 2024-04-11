@@ -6,11 +6,6 @@ variable "app_env" {
   type = string
 }
 
-variable "image_tag_mutability" {
-  type    = string
-  default = "IMMUTABLE"
-}
-
 variable "repository_force_delete" {
   type    = string
   default = true

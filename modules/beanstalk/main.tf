@@ -1,8 +1,14 @@
-data "aws_elastic_beanstalk_hosted_zone" "current" {}
+# Get default subnets
+data "aws_subnets" "default_subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [var.vpc_id]
+  }
+}
 
 # Setup key pair for ssh 
 resource "aws_key_pair" "key_pair" {
-  key_name   = "${var.app_name}-${var.app_env}-bean-key"
+  key_name   = "${var.app_name}-${var.app_env}-key"
   public_key = file(var.key_directory)
 }
 
@@ -10,15 +16,15 @@ resource "aws_elastic_beanstalk_application" "app_beanstalk" {
   name = "${var.app_name}-${var.app_env}"
 }
 
-data "aws_elastic_beanstalk_solution_stack" "multi_docker" {
+data "aws_elastic_beanstalk_solution_stack" "solution_stack" {
   most_recent = true
-  name_regex  = "^64bit Amazon Linux (.*) Multi-container Docker (.*)$"
+  name_regex  = "^64bit Amazon Linux (.*) running Docker$"
 }
 
 resource "aws_elastic_beanstalk_environment" "app_beanstalk_env" {
   name                = "${var.app_name}-${var.app_env}-env"
   application         = aws_elastic_beanstalk_application.app_beanstalk.name
-  solution_stack_name = data.aws_elastic_beanstalk_solution_stack.multi_docker.name
+  solution_stack_name = data.aws_elastic_beanstalk_solution_stack.solution_stack.name
 
   # Set up auto-scaling instances
   setting {
@@ -79,7 +85,7 @@ resource "aws_elastic_beanstalk_environment" "app_beanstalk_env" {
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "UpperThreshold"
-    value     = "70"
+    value     = "80"
   }
 
   # Set up EC2 instance
@@ -98,8 +104,26 @@ resource "aws_elastic_beanstalk_environment" "app_beanstalk_env" {
 
   setting {
     namespace = "aws:ec2:vpc"
-    name      = "ELBSecurityGroups"
-    value     = var.elb_security_group_id
+    name      = "Subnets"
+    value     = join(",", data.aws_subnets.default_subnets.ids)
+  }
+
+  setting {
+    namespace = "aws:ec2:vpc"
+    name      = "ELBSubnets"
+    value     = join(",", data.aws_subnets.default_subnets.ids)
+  }
+
+  setting {
+    namespace = "aws:ec2:vpc"
+    name      = "ELBScheme"
+    value     = "public"
+  }
+
+  setting {
+    namespace = "aws:ec2:vpc"
+    name      = "AssociatePublicIpAddress"
+    value     = "true"
   }
 
   # Set up cloudwatch logs
@@ -162,40 +186,13 @@ resource "aws_elastic_beanstalk_environment" "app_beanstalk_env" {
     value     = "HTTP"
   }
 
-  setting {
-    namespace = "aws:elbv2:listener:default"
-    name      = "DefaultProcess"
-    value     = "HTTP"
-  }
-
   # Set up environment variable
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "RAILS_ENV"
-    value     = var.app_env
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "RDS_DB_NAME"
-    value     = var.rds_db_name
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "RDS_USERNAME"
-    value     = var.rds_username
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "RDS_PASSWORD"
-    value     = var.rds_password
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "RDS_HOSTNAME"
-    value     = var.rds_hostname
+  dynamic "setting" {
+    for_each = var.env_vars
+    content {
+      namespace = "aws:elasticbeanstalk:application:environment"
+      name      = setting.key
+      value     = setting.value
+    }
   }
 }

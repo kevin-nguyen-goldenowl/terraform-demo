@@ -4,7 +4,8 @@ variable "app_name" {
 }
 
 variable "app_env" {
-  type = string
+  type        = string
+  description = "Application environment"
 }
 
 variable "instance_port" {
@@ -40,22 +41,22 @@ variable "ec2_role" {
 // Database setting
 variable "db_engine" {
   type        = string
-  description = "Database engine (postgres, mysql,...)"
+  description = "Database engine"
 }
 
 variable "db_instance_class" {
   type        = string
-  description = "Database type (db.t3.micro,...)"
+  description = "Database type"
 }
 
 variable "db_engine_version" {
   type        = string
-  description = "Database version (14.5,...)"
+  description = "Database version"
 }
 
 variable "db_allocated_storage" {
   type        = string
-  description = "Storage (10GB,...)"
+  description = "Database Storage"
 }
 
 variable "db_username" {

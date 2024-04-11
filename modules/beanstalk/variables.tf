@@ -3,6 +3,11 @@ variable "app_name" {
   description = "Application name"
 }
 
+variable "app_env" {
+  type        = string
+  description = "Application environment"
+}
+
 variable "key_directory" {
   type        = string
   description = "The location on machine where the key is stored"
@@ -56,23 +61,7 @@ variable "vpc_id" {
   type = string
 }
 
-// Environment variable
-variable "rds_username" {
-  type = string
-}
-
-variable "rds_password" {
-  type = string
-}
-
-variable "rds_hostname" {
-  type = string
-}
-
-variable "rds_db_name" {
-  type = string
-}
-
-variable "app_env" {
-  type = string
+// Environment variables
+variable "env_vars" {
+  type = map(string)
 }

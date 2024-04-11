@@ -1,5 +1,5 @@
 module "app" {
-  source               = "../../modules/"
+  source               = "./modules/"
   app_name             = var.app_name
   app_env              = var.app_env
   instance_port        = 80
