@@ -8,7 +8,7 @@ variable "app_env" {
   description = "Application environment"
 }
 
-variable "key_directory" {
+variable "sshkey_dir" {
   type        = string
   description = "The location on machine where the key is stored"
 }

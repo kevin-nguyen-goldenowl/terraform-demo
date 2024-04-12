@@ -13,7 +13,7 @@ variable "instance_port" {
   description = "Exposed port of container"
 }
 
-variable "key_directory" {
+variable "sshkey_dir" {
   type        = string
   description = "Directory where the key is stored in your computer"
 }

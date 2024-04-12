@@ -11,5 +11,5 @@ module "app" {
   db_instance_class    = var.db_instance_class
   db_password          = var.db_password
   db_username          = var.db_username
-  key_directory        = var.key_directory
+  sshkey_dir           = var.sshkey_dir
 }

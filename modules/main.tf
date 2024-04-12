@@ -31,7 +31,7 @@ module "beanstalk" {
   app_security_group_id = module.vpc.beanstalk_sg.id
   elb_security_group_id = module.vpc.elb_sg.id
   instance_port         = var.instance_port
-  key_directory         = var.key_directory
+  sshkey_dir            = var.sshkey_dir
   vpc_id                = module.vpc.vpc.id
   ec2_role              = var.ec2_role
   service_role          = var.service_role

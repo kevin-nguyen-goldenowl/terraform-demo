@@ -1,6 +1,6 @@
 app_name             = "ideas-api"
 app_env              = "staging"
-key_directory        = "~/.ssh/idea-eb-prod.pub"
+sshkey_dir           = "~/.ssh/idea-eb-prod.pub"
 instance_port        = 80
 min_size             = 1
 max_size             = 2

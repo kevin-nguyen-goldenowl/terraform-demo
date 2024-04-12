@@ -9,7 +9,7 @@ data "aws_subnets" "default_subnets" {
 # Setup key pair for ssh 
 resource "aws_key_pair" "key_pair" {
   key_name   = "${var.app_name}-${var.app_env}-key"
-  public_key = file(var.key_directory)
+  public_key = file(var.sshkey_dir)
 }
 
 resource "aws_elastic_beanstalk_application" "app_beanstalk" {
